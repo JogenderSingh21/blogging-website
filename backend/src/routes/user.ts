@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import { signinInput, signupInput } from "@jojosehrawat/medium-common";
 
 export const userRouter = new Hono<{
@@ -82,5 +82,45 @@ userRouter.post("/signin", async (c) => {
     console.log(error);
     c.status(411);
     return c.text("Invalid");
+  }
+});
+
+userRouter.get("/me", async (c) => {
+  try {
+    const header = c.req.header("authorization") || "";
+
+    const token = header.split(" ")[1];
+
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const { id } = await verify(token, c.env.JWT_SECRET);
+    if (id) {
+      const user = await prisma.user.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          username: true,
+          name: true,
+        },
+      });
+
+      return c.json({
+        user,
+      });
+    } else {
+      c.status(403);
+      return c.json({
+        error: "Not Authorized",
+      });
+    }
+  } catch (error) {
+    c.status(403);
+    return c.json({
+      error: "Error while Authorization",
+    });
   }
 });

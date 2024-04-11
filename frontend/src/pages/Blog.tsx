@@ -17,7 +17,7 @@ export const Blog = () => {
       {loading ? (
         "loading..."
       ) : (
-        <div className="grid grid-cols-3 my-14 mx-20 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 my-14 mx-5 lg:mx-20 lg:gap-5">
           <div className="col-span-2 gap-4 flex flex-col">
             <div className="text-5xl font-bold">{blog.title}</div>
             <div className="text-slate-500">
@@ -25,11 +25,11 @@ export const Blog = () => {
             </div>
             <div className="text-lg text-slate-700">{blog.content}</div>
           </div>
-          <div className="">
+          <div className="blogAuthor">
             <div className="font-medium text-gray-800">Author</div>
             <div className="flex gap-4 mt-4 items-center">
               <div>
-                <Avatar name={" "} size={"6"}></Avatar>
+                <Avatar name={" "} size={"small"}></Avatar>
               </div>
               <div>
                 <div className="text-2xl font-bold">{blog.author.name}</div>

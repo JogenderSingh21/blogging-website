@@ -31,7 +31,7 @@ blogRouter.use("/*", async (c, next) => {
       });
     }
   } catch (error) {
-    c.status(411);
+    c.status(403);
     return c.json({
       message: "some error while authorization",
       error,

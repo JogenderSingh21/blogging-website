@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Avatar } from "./BlogCard";
+import { useAuth } from "../hooks";
 
 const Appbar = () => {
+  const { user } = useAuth();
+  // const {user } =
   return (
     <div className="border-b flex justify-between px-10 py-4 items-center bg-white shadow-md">
       <Link to={"/blogs"}>
@@ -16,7 +19,7 @@ const Appbar = () => {
             New Blog +
           </button>
         </Link>
-        <Avatar name={"Jogender"} size={"10"}></Avatar>
+        <Avatar name={user.name} size={"big"}></Avatar>
       </div>
     </div>
   );

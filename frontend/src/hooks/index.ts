@@ -1,12 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
+import { useNavigate } from "react-router-dom";
 
 interface BlogType {
   content: string;
   title: string;
   id: number;
   author: { name: string };
+}
+
+interface UserType {
+  id: number;
+  name: string;
+  username: string;
 }
 
 export const useBlogs = () => {
@@ -69,5 +76,41 @@ export const useBlog = ({ id }: { id: string }) => {
   return {
     loading,
     blog,
+  };
+};
+
+export const useAuth = (to: boolean = false) => {
+  const [authLoading, setAuthLoading] = useState(false);
+  const [user, setUser] = useState<UserType>({
+    id: 0,
+    name: "",
+    username: "",
+  });
+  const navigate = useNavigate();
+  useEffect(() => {
+    setAuthLoading(true);
+    axios
+      .get(`${BACKEND_URL}/api/v1/user/me`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setUser(response.data.user);
+        setAuthLoading(false);
+        if (to) {
+          navigate(`/blogs`);
+        }
+      })
+      .catch((error) => {
+        alert(error);
+        console.error(error);
+        navigate(`/signup`);
+      });
+  }, []);
+
+  return {
+    authLoading,
+    user,
   };
 };

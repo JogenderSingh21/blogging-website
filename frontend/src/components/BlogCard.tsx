@@ -20,7 +20,7 @@ export const BlogCard = ({
       <div className="border-b pb-8 pt-5 mx-6 cursor-pointer">
         <div className="flex items-center gap-2">
           <div>
-            <Avatar name={authorName}></Avatar>
+            <Avatar name={authorName} size="small"></Avatar>
           </div>
           <div className="">{authorName}</div>
           <div className="w-0.5 h-0.5 bg-gray-400 rounded-full"></div>
@@ -40,18 +40,20 @@ export const BlogCard = ({
 
 export const Avatar = ({
   name,
-  size = "6",
+  size,
 }: {
   name: string;
-  size?: string;
+  size: "big" | "small";
 }) => {
   return (
     <div
-      className={`relative inline-flex items-center justify-center w-${size} h-${size} overflow-hidden bg-gray-300 rounded-full dark:bg-gray-600`}
+      className={`relative inline-flex items-center justify-center ${
+        size === "small" ? "w-6 h-6" : "w-10 h-10"
+      } overflow-hidden bg-gray-300 rounded-full dark:bg-gray-600`}
     >
       <span
         className={`font-medium text-gray-600 dark:text-gray-300  ${
-          size == "6" ? "text-sm" : "text-lg"
+          size == "small" ? "text-sm" : "text-lg"
         }`}
       >
         {name[0]}
