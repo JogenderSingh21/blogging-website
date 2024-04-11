@@ -105,6 +105,7 @@ export const useAuth = (to: boolean = false) => {
       .catch((error) => {
         alert(error);
         console.error(error);
+        setAuthLoading(false);
         navigate(`/signup`);
       });
   }, []);
