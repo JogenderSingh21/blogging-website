@@ -1,5 +1,6 @@
 import Appbar from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
+import SkeletonCard from "../components/Skeleton";
 import { useBlogs } from "../hooks";
 
 export const Blogs = () => {
@@ -12,19 +13,25 @@ export const Blogs = () => {
       </div>
       <div className="flex justify-center">
         <div className="flex-col max-w-2xl w-[42rem]">
-          {loading
-            ? "loading..."
-            : blogs.map((blog) => {
-                return (
-                  <BlogCard
-                    id={blog.id}
-                    authorName={blog.author.name}
-                    title={blog.title}
-                    publishedDate={`${new Date().toDateString()}`}
-                    content={blog.content}
-                  ></BlogCard>
-                );
-              })}
+          {loading ? (
+            <>
+              <SkeletonCard></SkeletonCard>
+              <SkeletonCard></SkeletonCard>
+              <SkeletonCard></SkeletonCard>
+            </>
+          ) : (
+            blogs.map((blog) => {
+              return (
+                <BlogCard
+                  id={blog.id}
+                  authorName={blog.author.name}
+                  title={blog.title}
+                  publishedDate={`${new Date().toDateString()}`}
+                  content={blog.content}
+                ></BlogCard>
+              );
+            })
+          )}
           {/* <BlogCard
             authorName="Jogender Singh"
             title="Nam Minima blanditiis doloremque perferendis sit"

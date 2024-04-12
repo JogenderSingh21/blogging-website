@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import Appbar from "../components/Appbar";
 import { useBlog } from "../hooks";
 import { Avatar } from "../components/BlogCard";
+import { SkeletonBlog } from "../components/Skeleton";
 
 export const Blog = () => {
   const { Id } = useParams();
@@ -15,9 +16,9 @@ export const Blog = () => {
         <Appbar></Appbar>
       </div>
       {loading ? (
-        "loading..."
+        <SkeletonBlog></SkeletonBlog>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 my-14 mx-5 lg:mx-20 lg:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 m-3 lg:my-14 lg:mx-20 lg:gap-5">
           <div className="col-span-2 gap-4 flex flex-col">
             <div className="text-5xl font-bold">{blog.title}</div>
             <div className="text-slate-500">

@@ -10,7 +10,7 @@ interface BlogType {
   author: { name: string };
 }
 
-interface UserType {
+export interface UserType {
   id: number;
   name: string;
   username: string;
@@ -33,7 +33,7 @@ export const useBlogs = () => {
         setLoading(false);
       })
       .catch((error) => {
-        alert(error);
+        // alert(error);
         console.error(error);
       });
   }, []);
@@ -79,12 +79,12 @@ export const useBlog = ({ id }: { id: string }) => {
   };
 };
 
-export const useAuth = (to: boolean = false) => {
+export const useAuth = (to?: string) => {
   const [authLoading, setAuthLoading] = useState(false);
   const [user, setUser] = useState<UserType>({
     id: 0,
-    name: "",
-    username: "",
+    name: " ",
+    username: " ",
   });
   const navigate = useNavigate();
   useEffect(() => {
@@ -99,6 +99,7 @@ export const useAuth = (to: boolean = false) => {
         setUser(response.data.user);
         setAuthLoading(false);
         if (to) {
+          console.log("navigating to blogs");
           navigate(`/blogs`);
         }
       })
@@ -106,7 +107,9 @@ export const useAuth = (to: boolean = false) => {
         // alert(error);
         console.error(error);
         setAuthLoading(false);
-        navigate(`/signup`);
+        if (!to || to == "root") {
+          navigate("/signup");
+        }
       });
   }, []);
 

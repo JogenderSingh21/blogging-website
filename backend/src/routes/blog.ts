@@ -10,7 +10,11 @@ export const blogRouter = new Hono<{
     JWT_SECRET: string;
   };
   Variables: {
-    userId: string;
+    user: {
+      id: number;
+      username: string;
+      name: string | null;
+    };
   };
 }>();
 
@@ -20,9 +24,23 @@ blogRouter.use("/*", async (c, next) => {
 
     const token = header.split(" ")[1];
 
-    const user = await verify(token, c.env.JWT_SECRET);
-    if (user.id) {
-      c.set("userId", user.id);
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const { id } = await verify(token, c.env.JWT_SECRET);
+    const user = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+      },
+    });
+    if (id && user) {
+      c.set("user", user);
       await next();
     } else {
       c.status(403);
@@ -54,15 +72,15 @@ blogRouter.post("/", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const authorId = c.get("userId");
-  console.log(authorId);
+  const user = c.get("user");
+  console.log(user);
 
   try {
     const blog = await prisma.blog.create({
       data: {
         title: body.title,
         content: body.content,
-        authorId: Number(authorId),
+        authorId: Number(user.id),
       },
     });
     console.log(blog);
@@ -118,7 +136,7 @@ blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
-
+  const user = c.get("user");
   try {
     const blogs = await prisma.blog.findMany({
       select: {
@@ -135,6 +153,7 @@ blogRouter.get("/bulk", async (c) => {
 
     return c.json({
       blogs,
+      user,
     });
   } catch (error) {
     console.log(error);
@@ -151,6 +170,7 @@ blogRouter.get("/:id", async (c) => {
   }).$extends(withAccelerate());
 
   const id = c.req.param("id");
+  const user = c.get("user");
   try {
     const blog = await prisma.blog.findFirst({
       where: {
@@ -170,6 +190,7 @@ blogRouter.get("/:id", async (c) => {
 
     return c.json({
       blog,
+      user,
     });
   } catch (error) {
     console.log(error);

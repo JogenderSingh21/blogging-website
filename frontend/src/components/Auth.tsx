@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { SignupInput } from "@jojosehrawat/medium-common";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
+import { Spin } from "../pages/Root";
 
 const Auth = ({ type }: { type: "signup" | "signin" }) => {
+  const [loading, setLoading] = useState(false);
   const [postInputs, setPostInputs] = useState<SignupInput>({
     username: "",
     password: "",
@@ -14,6 +16,7 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
 
   async function sendRequest() {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type}`,
@@ -21,8 +24,10 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const token = response.data.token;
       localStorage.setItem("token", token);
+      setLoading(false);
       navigate("/blogs");
     } catch (error) {
+      setLoading(false);
       alert(error);
     }
   }
@@ -80,9 +85,17 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
           <button
             type="button"
             onClick={sendRequest}
-            className="text-white bg-gray-900 hover:bg-gray-950 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            className={`text-white   focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-3 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 relative ${
+              loading ? "bg-gray-700" : "bg-gray-900 hover:bg-gray-950"
+            }`}
+            disabled={loading}
           >
-            {type === "signup" ? "Create account" : "Sign in to account"}
+            <div className="mr-3 absolute left-20" hidden={!loading}>
+              <Spin size="small"></Spin>
+            </div>
+            <span>
+              {type === "signup" ? "Create account" : "Sign in to account"}
+            </span>
           </button>
         </div>
       </div>
