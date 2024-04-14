@@ -35,13 +35,17 @@ userRouter.post("/signup", async (c) => {
 
     const token = await sign({ id: user.id }, c.env.JWT_SECRET);
     return c.json({
-      message: "Successfully Registered",
-      token: token,
+      userDetails: {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        token: token,
+      },
     });
   } catch (error) {
     console.log(error);
     c.status(411);
-    return c.text("Invalid");
+    return c.json(error);
   }
 });
 
@@ -75,13 +79,17 @@ userRouter.post("/signin", async (c) => {
 
     const token = await sign({ id: user.id }, c.env.JWT_SECRET);
     return c.json({
-      message: "Login Successful",
-      token: token,
+      userDetails: {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        token: token,
+      },
     });
   } catch (error) {
     console.log(error);
     c.status(411);
-    return c.text("Invalid");
+    return c.json(error);
   }
 });
 
@@ -91,26 +99,9 @@ userRouter.get("/me", async (c) => {
 
     const token = header.split(" ")[1];
 
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-
     const { id } = await verify(token, c.env.JWT_SECRET);
     if (id) {
-      const user = await prisma.user.findFirst({
-        where: {
-          id,
-        },
-        select: {
-          id: true,
-          username: true,
-          name: true,
-        },
-      });
-
-      return c.json({
-        user,
-      });
+      return c.json({ id });
     } else {
       c.status(403);
       return c.json({

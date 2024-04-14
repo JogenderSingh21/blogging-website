@@ -19,13 +19,23 @@ export interface UserType {
 export const useBlogs = () => {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState<BlogType[]>([]);
+  const navigate = useNavigate();
+  useAuth({
+    failure: "signup",
+  });
 
   useEffect(() => {
     setLoading(true);
+    const userDetails = localStorage.getItem("userDetails");
+    if (!userDetails) {
+      navigate("/signup");
+      return;
+    }
+    const token = JSON.parse(userDetails).token;
     axios
       .get(`${BACKEND_URL}/api/v1/blog/bulk`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
+          authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -54,13 +64,24 @@ export const useBlog = ({ id }: { id: string }) => {
       name: "",
     },
   });
+  const navigate = useNavigate();
+  useAuth({
+    failure: "signup",
+  });
 
   useEffect(() => {
     setLoading(true);
+    const userDetails = localStorage.getItem("userDetails");
+    if (!userDetails) {
+      setLoading(false);
+      navigate("/signup");
+      return;
+    }
+    const token = JSON.parse(userDetails).token;
     axios
       .get(`${BACKEND_URL}/api/v1/blog/${id}`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
+          authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -79,42 +100,51 @@ export const useBlog = ({ id }: { id: string }) => {
   };
 };
 
-export const useAuth = (to?: string) => {
-  const [authLoading, setAuthLoading] = useState(false);
-  const [user, setUser] = useState<UserType>({
-    id: 0,
-    name: " ",
-    username: " ",
-  });
+export const useAuth = ({
+  success,
+  failure,
+}: {
+  success?: string;
+  failure?: string;
+}) => {
+  const [authLoading, setAuthLoading] = useState(true);
+
   const navigate = useNavigate();
+
   useEffect(() => {
     setAuthLoading(true);
+    const userDetails = localStorage.getItem("userDetails");
+    if (!userDetails) {
+      setAuthLoading(false);
+      if (failure) {
+        navigate(`/${failure}`);
+      }
+      return;
+    }
+    const token = JSON.parse(userDetails).token;
     axios
       .get(`${BACKEND_URL}/api/v1/user/me`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("token")}`,
+          authorization: `Bearer ${token}`,
         },
       })
-      .then((response) => {
-        setUser(response.data.user);
+      .then(() => {
         setAuthLoading(false);
-        if (to) {
-          console.log("navigating to blogs");
-          navigate(`/blogs`);
+        if (success) {
+          navigate(`/${success}`);
         }
       })
       .catch((error) => {
         // alert(error);
         console.error(error);
         setAuthLoading(false);
-        if (!to || to == "root") {
-          navigate("/signup");
+        if (failure) {
+          navigate(`/${failure}`);
         }
       });
   }, []);
 
   return {
     authLoading,
-    user,
   };
 };

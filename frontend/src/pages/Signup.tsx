@@ -4,7 +4,9 @@ import { useAuth } from "../hooks";
 import { Spinner } from "./Root";
 
 export const Signup = () => {
-  const { authLoading } = useAuth("signup");
+  const { authLoading } = useAuth({
+    success: "blogs",
+  });
   return (
     <div className="lg:grid lg:grid-cols-2">
       {authLoading && <Spinner></Spinner>}

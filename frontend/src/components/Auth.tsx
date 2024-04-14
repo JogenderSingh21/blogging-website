@@ -22,8 +22,8 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
         `${BACKEND_URL}/api/v1/user/${type}`,
         postInputs
       );
-      const token = response.data.token;
-      localStorage.setItem("token", token);
+      const userDetails = response.data.userDetails;
+      localStorage.setItem("userDetails", JSON.stringify(userDetails));
       setLoading(false);
       navigate("/blogs");
     } catch (error) {

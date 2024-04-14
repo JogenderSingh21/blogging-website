@@ -2,7 +2,10 @@
 import { useAuth } from "../hooks";
 
 const Root = () => {
-  const { authLoading } = useAuth("root");
+  const { authLoading } = useAuth({
+    success: "blogs",
+    failure: "signup",
+  });
   return (
     <div className="flex justify-center items-center">
       {authLoading && <Spinner></Spinner>}

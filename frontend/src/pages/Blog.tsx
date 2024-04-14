@@ -24,7 +24,11 @@ export const Blog = () => {
             <div className="text-slate-500">
               Posted on {new Date().toDateString()}
             </div>
-            <div className="text-lg text-slate-700">{blog.content}</div>
+            {/* <div className="text-lg text-slate-700">{blog.content}</div> */}
+            <div
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            ></div>
           </div>
           <div className="blogAuthor">
             <div className="font-medium text-gray-800">Author</div>
