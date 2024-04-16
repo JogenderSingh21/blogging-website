@@ -2,8 +2,8 @@ import { Avatar } from "./BlogCard";
 
 const SkeletonCard = () => {
   return (
-    <div role="status" className="animate-pulse w-full">
-      <div className="border-b pb-8 pt-5 mx-6 cursor-pointer">
+    <div role="status" className="animate-pulse w-screen">
+      <div className="border-b pb-8 pt-5 mx-6 cursor-pointer max-w-screen-lg">
         <div className="flex items-center gap-2">
           <Avatar name={" "} size="small"></Avatar>
           <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 w-20"></div>

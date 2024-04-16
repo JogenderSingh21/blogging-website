@@ -24,6 +24,6 @@ a {
 
 .ql-toolbar.ql-snow {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   border-radius: 5px;
 }

@@ -29,9 +29,9 @@ export const BlogCard = ({
           </div>
         </div>
         <h2 className="text-2xl font-bold mt-3 mb-1">{title}</h2>
-        <div className="text-gray-600 line-clamp-2">{content}</div>
+        <div className="text-gray-600 line-clamp-2 break-all">{content}</div>
         <div className="mt-6 text-gray-400 text-sm">{`${Math.ceil(
-          content.length / 100
+          content.length / 300
         )} min read`}</div>
       </div>
     </Link>

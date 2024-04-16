@@ -20,11 +20,13 @@ export const Blog = () => {
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 m-3 lg:my-14 lg:mx-20 lg:gap-5">
           <div className="col-span-2 gap-4 flex flex-col">
-            <div className="text-5xl font-bold">{blog.title}</div>
+            <div className="md:text-5xl text-3xl font-bold">{blog.title}</div>
             <div className="text-slate-500">
-              Posted on {new Date().toDateString()}
+              Posted on {new Date().toDateString().slice(4)}
+              <span className="mx-2 inline-block lg:hidden">
+                By {blog.author.name}
+              </span>
             </div>
-            {/* <div className="text-lg text-slate-700">{blog.content}</div> */}
             <div
               className="blog-content"
               dangerouslySetInnerHTML={{ __html: blog.content }}

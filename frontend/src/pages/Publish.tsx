@@ -82,36 +82,41 @@ function Publish() {
 
   return (
     <div>
-      <Appbar toPublish={true} onClick={handlePublish}></Appbar>
+      <div className="sticky top-0 left-0 right-0 z-30">
+        <Appbar toPublish={true} onClick={handlePublish}></Appbar>
+      </div>
       <div className="flex justify-center px-6 mt-3 lg:mt-6">
         <div className="w-full max-w-screen-md">
-          <div>
-            <textarea
-              ref={textareaRef}
-              onInput={handleInputChange}
-              className="w-full text-5xl font-bold focus:outline-none py-2 text-gray-800 resize-none no-scrollbar h-fit"
-              rows={1}
-              name="title"
-              value={userInfo.title}
-              onChange={onChangeTitle}
-              placeholder="Title"
-              required
-            />
-            <div className="text-gray-400 flex gap-2 items-center">
-              <img
-                hidden={userInfo.title.length !== 150 ? true : false}
-                className="w-4 h-4"
-                src={warning}
-                alt="warning"
-              ></img>
-              <span hidden={userInfo.title.length !== 150 ? true : false}>
-                maximum character limit reached (150)
-              </span>
+          <div className="sticky top-0 z-20">
+            <div>
+              <textarea
+                ref={textareaRef}
+                onInput={handleInputChange}
+                className="w-full text-3xl md-text-5xl font-bold focus:outline-none py-2 text-gray-800 resize-none no-scrollbar h-fit"
+                rows={1}
+                name="title"
+                value={userInfo.title}
+                onChange={onChangeTitle}
+                placeholder="Title"
+                required
+              />
+              <div className="text-gray-400 flex gap-2 items-center">
+                <img
+                  hidden={userInfo.title.length !== 150 ? true : false}
+                  className="w-4 h-4"
+                  src={warning}
+                  alt="warning"
+                ></img>
+                <span hidden={userInfo.title.length !== 150 ? true : false}>
+                  maximum character limit reached (150)
+                </span>
+              </div>
+            </div>
+            <div className="mt-6">
+              <EditorToolbar toolbarId={"t1"} />
             </div>
           </div>
-          <div></div>
           <div className="mt-6 flex flex-col">
-            <EditorToolbar toolbarId={"t1"} />
             <ReactQuill
               theme="snow"
               value={userInfo.content}
@@ -120,11 +125,8 @@ function Publish() {
               modules={modules("t1")}
               formats={formats}
             />
+            <div></div>
           </div>
-          {/* <div
-          className="post__description"
-          dangerouslySetInnerHTML={{ __html: userInfo.content }}
-        /> */}
         </div>
       </div>
     </div>
